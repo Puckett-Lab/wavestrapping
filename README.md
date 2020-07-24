@@ -9,4 +9,4 @@ See createStimuli_fMRI.m for demonstration on how the wavestrapped images were m
 
 See createStimuli_color.m for example on how to apply to color images.
 
-
+Examples showing how to "heat" and "cool" scenes coming soon.
