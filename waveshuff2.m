@@ -1,21 +1,22 @@
+function f=waveshuff2(s,n,wv,S); 
 %Creates surrogate data by permuting wavelet coefficents for 2-D data
 %Only shuffles wavelet coefficients where the data is non-zero.
-%Completed M. Breakspear, 25-11-2002
-function f=waveshuff2(s,n,wv,S); if nargin<3, wv='db4'; end, if nargin<2 n=1:8; end
-%if nargin<4, cz=1; end    %choice of resampling scheme
-if nargin<4, S=sum(100*clock);, end						%Randomizing seed
+%Written by M.B. 2002
+
+if nargin<3, wv='db4'; end, if nargin<2 n=1:8; end
+if nargin<4, S=sum(100*clock); end	%Randomizing seed
 [rr,col] = size(s); dim=1; N=max(n);
 if ndims(s)>2, [rr,col,dim]=size(s); end
 rand('state',S);
-st=floor(rand(1,length(n))*10^6);									%A different seed for each level
+st=floor(rand(1,length(n))*10^6); %A different seed for each level
 fnd=find(ones(rr,col));
 for j=1:dim;
    fnd=intersect(fnd,find(s(:,:,j)));
-   [c(j,:),l]=wavedec2(s(:,:,j),N,wv);
+   [c(j,:),l]=wavedec2(s(:,:,j),N,wv); % perform 2-D wavelet decomposition
 end
 nzmtx=zeros(rr,col); nzmtx(fnd)=1;
 cc=c; cnt=0;
-for i=n, ch=[]; cv=[]; cd=[];						%Each scale
+for i=n, ch=[]; cv=[]; cd=[]; %Each scale
    nl1=l(N+2-i,1); nl2=l(N+2-i,2);
    ldr=floor(rr/(2^i));  fstr=ceil((nl1-ldr)/2);
    ldc=floor(col/(2^i)); fstc=ceil((nl2-ldc)/2);	
@@ -24,13 +25,13 @@ for i=n, ch=[]; cv=[]; cd=[];						%Each scale
    zmtxi(fstr+1:fstr+ldr,:)=nmtxi;
    nzmtxi(:,fstc+1:fstc+ldc)=zmtxi;
    nzmtxi(fstr+ldr+1:nl1,:)=zeros(nl1-fstr-ldr,fstc+ldc);
-   B=4;                                                                %Size of boundary to 'grab'
+   B=4; %Size of boundary to 'grab'
    nzbdy=circshift(nzmtxi,[0 -B])+circshift(nzmtxi,[0 B])+circshift(nzmtxi,[B])+circshift(nzmtxi,[-B]);
    %nzmtxi=nzmtxi+nzbdy;
    fndi=find(nzmtxi); fndb=find(nzbdy);
    if length(fndi)<2, break, end
    cnt=cnt+1;
-   for j=1:dim;												%Each image
+   for j=1:dim;	%Each image
       ch=detcoef2('h',c(j,:),l,i);
       cv=detcoef2('v',c(j,:),l,i);
       cd=detcoef2('d',c(j,:),l,i);
@@ -56,7 +57,7 @@ for i=n, ch=[]; cv=[]; cd=[];						%Each scale
 end
 f=zeros(size(s));
 for j=1:dim
-   ff(:,:,j)=waverec2(cc(j,:),l,wv);
+   ff(:,:,j)=waverec2(cc(j,:),l,wv); % perform multilevel 2-D wavelet reconstruction
 end
 f(find(s))=ff(find(s));
-f=f*(mean(abs(s(find(s))))/mean(abs(f(find(f)))))^1.3;                    %Renormalize
+f=f*(mean(abs(s(find(s))))/mean(abs(f(find(f)))))^1.3; %Renormalize

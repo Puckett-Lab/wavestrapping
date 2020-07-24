@@ -1,15 +1,30 @@
-%Creates surrogate data by permuting wavelet coefficents for 2-D data
-function f=wavesurr2(s,n,wv,cz,m); if nargin<3, wv='db4'; end, if nargin<2 n=8; end
+function f=wavesurr2(s,n,wv,cz,st,m); 
+%  Creates surrogate data by permuting wavelet coefficents for 2-D data
+%  Permutes entire image. 
+
+%  Written by M.B. - some commenting by A.M.P.  
+
+% s = input image
+% n = spatial scale
+% wv = wavelet type
+% cz = resampling scheme (1 = permute; 2 = rotate)
+% st = seed for randomization state. 0 = random seed. Any other number will be seed. 
+
+if nargin<3, wv='db4'; end, if nargin<2 n=8; end
 if nargin<4, cz=1; end    %choice of resampling scheme
-if nargin<5, m=12; end
+if nargin<5, st = 0; end
+if nargin<6, m=12; end
 [rr,col] = size(s); dim=1; N=max(n);
 if ndims(s)>2, [rr,col,dim]=size(s); end
-for j=1:dim;                    %jth row of c is the n-th timepoint of s
-   [c(j,:),l]=wavedec2(s(:,:,j),N,wv);
+for j=1:dim;  %jth row of c is the n-th timepoint of s
+   [c(j,:),l]=wavedec2(s(:,:,j),N,wv); % perform 2-D wavelet decomposition
 end
 cc=c;
 for i=n, ch=[]; cv=[]; cd=[];
-   st=sum(100*clock);           %?reset random state
+   if st == 0
+       st=sum(100*clock);  %?reset random state
+   end
+   
    nl1=l(N+2-i,1); nl2=l(N+2-i,2);
    for j=1:dim;
       ch=detcoef2('h',c(j,:),l,i);
@@ -44,6 +59,6 @@ for i=n, ch=[]; cv=[]; cd=[];
    end
 end
 for j=1:dim
-   f(:,:,j)=waverec2(cc(j,:),l,wv);
+   f(:,:,j)=waverec2(cc(j,:),l,wv); % perform multilevel 2-D wavelet reconstruction
 end
 

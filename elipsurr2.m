@@ -1,5 +1,15 @@
-%Creates surrogate data by permuting wavelet coefficents for 2-D data
 function f=elipsurr2(s,n,wv,cz,rad); 
+%  Creates surrogate data by permuting wavelet coefficents for 2-D data
+%  Permutes a central ellipitcal region. 
+
+%  Written by M.B. - some commenting by A.M.P.  
+% s = input image
+% n = spatial scale
+% wv = wavelet type
+% cz = resampling scheme (1 = permute; 2 = rotate)
+% rad = radius measures
+
+% defaults
 if nargin<3, wv='db2'; end, 
 if nargin<2 n=8; end
 if nargin<4, cz=1; end    %choice of resampling scheme
@@ -8,9 +18,11 @@ if length(rad)<2, rad(1,2)=rad(1,1); end
 [rr,col] = size(s); dim=1; N=max(n);
 if ndims(s)>2, [rr,col,dim]=size(s); end
 for j=1:dim;
-   [c(j,:),l]=wavedec2(s(:,:,j),N,wv);
+   [c(j,:),l]=wavedec2(s(:,:,j),N,wv); % perform 2-D wavelet decomposition
 end
 cc=c;
+
+% wavestrap
 for i=n, ch=[]; cv=[]; cd=[]; i;
    st=sum(100*clock);
    nl1=l(N+2-i,1); nl2=l(N+2-i,2); m1=ceil(nl1/2); m2=ceil(nl2/2);
@@ -58,5 +70,5 @@ for i=n, ch=[]; cv=[]; cd=[]; i;
    end
 end
 for j=1:dim
-   f(:,:,j)=waverec2(cc(j,:),l,wv);
+   f(:,:,j)=waverec2(cc(j,:),l,wv); % And finally perform multilevel 2-D wavelet reconstruction
 end

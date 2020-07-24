@@ -1,5 +1,7 @@
-%Creates surrogate data in the time domain for a series of images
 function f=surrimage(s,nn,wv,chc,N); 
+%  Function to create surrogate data in the time domain for a series of images
+%  Written by M.B. 
+
 if nargin<3, wv='db6'; end, 
 if nargin<2 nn=1:3; end, n=max(nn);
 [rr,col,nt] = size(s); 
