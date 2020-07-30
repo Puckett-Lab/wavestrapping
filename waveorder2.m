@@ -1,5 +1,8 @@
 function f=waveorder2(s,n,wv,it,S);
-%Creates ordered image by manipulating wavelet coefficents for 2-D data
+%  Creates ordered image by manipulating wavelet coefficents for 2-D data
+%  Can be used to "cool" image (iteratively order) 
+
+%  Written by M.B.
 
 if nargin<3, wv='db4'; end,
 if nargin<2 n=8; end
