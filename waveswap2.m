@@ -1,6 +1,10 @@
 function f=waveswap2(s,n,wv,it,S);
-%Creates surrogate data by permuting wavelet coefficents for 2-D data
+%  Creates surrogate data by permuting wavelet coefficents for 2-D data
+%  Can be used to "heat" image (iteratively disorder) 
 
+%  Written by M.B.
+
+% defaults
 if nargin<3, wv='db4'; end,
 if nargin<2 n=8; end
 if nargin<4, it=100; end
