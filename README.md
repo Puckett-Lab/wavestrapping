@@ -10,3 +10,5 @@ See createStimuli_fMRI.m for demonstration on how the wavestrapped images were m
 See createStimuli_color.m for example on how to apply to color images.
 
 See createStimuli_thermoMovies.m for example on how to iteratively apply wavestrapping to heat / cool an image. 
+
+See createStimuli_surrogateMovies.m for example on how to apply across dynamic (i.e., film) stimuli. 
